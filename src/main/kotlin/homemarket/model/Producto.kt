@@ -4,32 +4,32 @@ import javax.persistence.Entity
 import javax.persistence.Id
 
 @Entity
-class Producto(private val nombre: String,
-               private val precio: Int,
+class Producto(val nombre: String,
+               val precio: Int,
                @Id
-               private val id: String,
-               private val unidad: String,
-               private var estaDeOferta: Boolean = false,
-               private var descuento: Int = 0) {
+               val id: String,
+               val unidad: String,
+               var estaDeOferta: Boolean = false,
+               var descuento: Int = 0) {
 
 
-    fun getNombre(): String {
+    fun nombre(): String {
         return this.nombre.toUpperCase()
     }
 
-    fun getPrecio(): Int {
+    fun precio(): Int {
         return this.precio
     }
 
-    fun getId(): String {
+    fun id(): String {
         return this.id.toUpperCase()
     }
 
-    fun getUnidad(): String {
+    fun unidad(): String {
         return this.unidad.toUpperCase()
     }
 
-    fun estaDeOferta(): Boolean {
+    fun oferta(): Boolean {
         return this.estaDeOferta
     }
 

@@ -1,10 +1,11 @@
 package homemarket.Repositories
 
-import homemarket.model.Producto
+import homemarket.model.ListaDeCarrito
+import homemarket.model.ListaWrapper
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ProductoRepository: CrudRepository<Producto, String> {
+interface ListaDeCarritoRepository: CrudRepository<ListaDeCarrito, Long> {
 
 }

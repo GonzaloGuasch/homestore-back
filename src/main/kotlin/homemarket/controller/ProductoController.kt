@@ -12,9 +12,6 @@ class ProductoController(private var productoRepository: ProductoRepository) {
     @GetMapping("/traerTodos")
     fun todosLosProductos() = this.productoRepository.findAll()
 
-    @GetMapping("/hola")
-    fun index() = "Hola"
-
     @GetMapping("/getProducto/{id}")
     fun productoPorId(@PathVariable id: String) = this.productoRepository.findById(id)
 

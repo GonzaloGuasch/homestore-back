@@ -1,24 +1,38 @@
 package homemarket.model
 
-class ListaDeCarrito(private var productosEnLista: MutableMap<Producto, Int> = mutableMapOf()){
+import javax.persistence.*
 
-    fun productosEnLista(): MutableSet<Producto>{
+@Entity
+class ListaDeCarrito(@ElementCollection
+                     var productosEnLista: MutableMap<String, Int> = mutableMapOf(),
+                     @Id
+                     var id: Long = 0){
+
+    fun productosEnLista(): MutableSet<String>{
         return this.productosEnLista.keys
     }
 
-    fun agregarProducto(producto: Producto, cantidad: Int) {
-        if(this.productosEnLista.containsKey(producto)){
-            var cantidadEnCarro = this.productosEnLista.get(producto)
+    fun agregarProducto(id_producto: String, cantidad: Int) {
+        if(this.productosEnLista.containsKey(id_producto)){
+            var cantidadEnCarro = this.productosEnLista.get(id_producto)
             var nuevacantidadEnCarro = cantidadEnCarro?.plus(cantidad)
-            this.productosEnLista.put(producto, nuevacantidadEnCarro!!)
+            this.productosEnLista.put(id_producto, nuevacantidadEnCarro!!)
         }else {
-            this.productosEnLista.putIfAbsent(producto, cantidad)
+            this.productosEnLista.putIfAbsent(id_producto, cantidad)
         }
 
     }
 
-    fun cantidadPorElProducto(id_producto: Producto): Int {
+    fun cantidadPorElProducto(id_producto: String): Int {
         return this.productosEnLista.get(id_producto)!!
+    }
+
+    fun estaVacio(): Boolean {
+        return this.productosEnLista.isEmpty()
+    }
+
+    fun vaciarProductos() {
+        this.productosEnLista = mutableMapOf()
     }
 
 
