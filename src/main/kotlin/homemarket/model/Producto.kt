@@ -10,8 +10,11 @@ class Producto(val nombre: String,
                val id: String,
                val unidad: String,
                var stock: Int,
+               var rubro: String,
+               var subrubro: String,
                var estaDeOferta: Boolean = false,
-               var descuento: Int = 0) {
+               var descuento: Int = 0,
+               var sinStack: Boolean = false) {
 
 
     fun nombre(): String {
@@ -56,6 +59,14 @@ class Producto(val nombre: String,
 
     fun agregarStock(stockParaAgregar: Int) {
         this.stock = this.stock + stockParaAgregar
+    }
+
+    fun subSubro(): String {
+        return this.subrubro
+    }
+
+    fun rubroProducto(): String {
+        return this.rubro
     }
 
 }

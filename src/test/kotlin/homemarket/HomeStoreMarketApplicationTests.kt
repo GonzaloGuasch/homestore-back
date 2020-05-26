@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 
 class ProductoTest {
 
-	private val producto_uno = Producto("turron fibra", 100, "SKU 12590", "c/u", 100)
+	private val producto_uno = Producto("turron fibra", 100, "SKU 12590", "c/u", 100, "GOLOSINAS", "Turrones")
 
 	@Test
 	fun test001UnProductoTieneUnNombreUnPrecioEnPesosUnIdentificadorYUnaUnidad() {
@@ -18,6 +18,8 @@ class ProductoTest {
 		assertEquals(producto_uno.id(), "SKU 12590")
 		assertEquals(producto_uno.unidad(), "C/U")
 		assertTrue(producto_uno.tieneStock())
+		assertEquals(producto_uno.rubroProducto(), "GOLOSINAS")
+		assertEquals(producto_uno.subSubro(), "Turrones")
 	}
 
 	@Test
