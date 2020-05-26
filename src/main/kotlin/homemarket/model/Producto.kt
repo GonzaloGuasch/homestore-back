@@ -9,6 +9,7 @@ class Producto(val nombre: String,
                @Id
                val id: String,
                val unidad: String,
+               var stock: Int,
                var estaDeOferta: Boolean = false,
                var descuento: Int = 0) {
 
@@ -39,6 +40,22 @@ class Producto(val nombre: String,
 
     fun terminarOferta() {
         this.estaDeOferta = false
+    }
+
+    fun tieneStock(): Boolean {
+        return this.stock > 0
+    }
+
+    fun disminuirStock(stockParaDisminuir: Int) {
+        if(this.stock - stockParaDisminuir < 0){
+            this.stock = 0
+        }else{
+            this.stock = this.stock - stockParaDisminuir
+        }
+    }
+
+    fun agregarStock(stockParaAgregar: Int) {
+        this.stock = this.stock + stockParaAgregar
     }
 
 }

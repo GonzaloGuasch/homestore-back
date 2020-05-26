@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 
 class ProductoTest {
 
-	private val producto_uno = Producto("turron fibra", 100, "SKU 12590", "c/u")
+	private val producto_uno = Producto("turron fibra", 100, "SKU 12590", "c/u", 100)
 
 	@Test
 	fun test001UnProductoTieneUnNombreUnPrecioEnPesosUnIdentificadorYUnaUnidad() {
@@ -17,6 +17,7 @@ class ProductoTest {
 		assertEquals(producto_uno.precio(), 100)
 		assertEquals(producto_uno.id(), "SKU 12590")
 		assertEquals(producto_uno.unidad(), "C/U")
+		assertTrue(producto_uno.tieneStock())
 	}
 
 	@Test
@@ -27,13 +28,19 @@ class ProductoTest {
 		producto_uno.terminarOferta()
 		assertFalse(producto_uno.oferta())
 	}
+	@Test
+	fun test003UnProductoDisminuyeYAUmentaSuStock(){
+		producto_uno.disminuirStock(101)
+		assertFalse(producto_uno.tieneStock())
+
+		producto_uno.agregarStock(1)
+		assertTrue(producto_uno.tieneStock())
+	}
 
 }
 
 class ListaDeCarritoTest{
 	var lista = ListaDeCarrito()
-	val producto_uno = Producto("turron fibra", 100, "SKU 12590", "c/u")
-
 
 	@Test
 	fun test001UnaListaDeCarritoNoTieneNingunProducto(){
