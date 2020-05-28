@@ -9,7 +9,14 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProductoRepository: CrudRepository<Producto, String> {
 
-    @Query("SELECT * FROM producto WHERE nombre like '%:nombreProducto%'", nativeQuery = true)
-     fun buscarProductoQueContenga(@Param("nombre") nombre: String): MutableList<Producto>
+    @Query("SELECT * FROM producto WHERE nombre like %:nombreProducto%", nativeQuery = true)
+     fun buscarProductoQueContenga(@Param("nombreProducto") nombreProducto: String): MutableList<Producto>
+
+
+    @Query("SELECT * FROM producto WHERE rubro = :unRubro", nativeQuery = true)
+    fun traerTodosDelRubro(@Param("unRubro") unRubro: String): MutableList<Producto>
+
+    @Query("SELECT * FROM producto LIMIT 9 OFFSET :numeroPagina", nativeQuery = true)
+    fun traerProductosDePagina(@Param("numeroPagina") numeroPagina: Int): MutableIterable<Producto>
 
 }

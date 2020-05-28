@@ -2,6 +2,7 @@ package homemarket.model
 
 import javax.persistence.Entity
 import javax.persistence.Id
+import javax.persistence.Lob
 
 @Entity
 class Producto(val nombre: String,
@@ -13,8 +14,9 @@ class Producto(val nombre: String,
                var rubro: String,
                var subrubro: String,
                var estaDeOferta: Boolean = false,
-               var descuento: Int = 0,
-               var sinStack: Boolean = false) {
+               @Lob
+               var imagenProducto: ByteArray? = null,
+               var descuento: Int = 0) {
 
 
     fun nombre(): String {
@@ -67,6 +69,10 @@ class Producto(val nombre: String,
 
     fun rubroProducto(): String {
         return this.rubro
+    }
+
+    fun settearImagenProducto(imagenProductoEnBytes: ByteArray) {
+        this.imagenProducto = imagenProductoEnBytes
     }
 
 }
