@@ -4,13 +4,13 @@ import homemarket.model.exception.PedidoNoValidoException
 import javax.persistence.*
 
 @Entity
-class Pedido(@ElementCollection
+class Pedidos(@ElementCollection
              private var parProductoCantidad: MutableSet<Pair<Producto, Int>> =  mutableSetOf(),
-             @Id @GeneratedValue
+              @Id @GeneratedValue
              private var id:Long = 0) {
 
 
-    fun productosEnPedido(): MutableList<Producto> {
+    fun productosEnPedidos(): MutableList<Producto> {
         var listaDePedidos = mutableListOf<Producto>()
         this.parProductoCantidad.forEach { parClaveCantidad -> listaDePedidos.add(parClaveCantidad.first) }
      return listaDePedidos
