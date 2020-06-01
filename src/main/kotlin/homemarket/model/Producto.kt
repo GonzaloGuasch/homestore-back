@@ -75,4 +75,8 @@ class Producto(val nombre: String,
         this.imagenProducto = imagenProductoEnBytes
     }
 
+    fun tieneStockDisponible(cantidadParaPedido: Int): Boolean {
+        return this.stock >= cantidadParaPedido
+    }
+
 }

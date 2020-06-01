@@ -1,9 +1,11 @@
 package homemarket
 
+import homemarket.model.Pedido
 import homemarket.model.Producto
-import homemarket.model.ListaDeCarrito
+import homemarket.model.exception.PedidoNoValidoException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import kotlin.test.assertFailsWith
 
 class ProductoTest {
 
@@ -11,7 +13,6 @@ class ProductoTest {
 
 	@Test
 	fun test001UnProductoTieneUnNombreUnPrecioEnPesosUnIdentificadorYUnaUnidad() {
-
 
 		assertEquals(producto_uno.nombre(), "TURRON FIBRA")
 		assertEquals(producto_uno.precio(), 100)
@@ -41,29 +42,24 @@ class ProductoTest {
 
 }
 
-class ListaDeCarritoTest{
-	var lista = ListaDeCarrito()
+class PedidoTest{
+
+	private val producto = Producto("turron fibra", 100, "SKU 12590", "c/u", 100, "GOLOSINAS", "Turrones")
 
 	@Test
-	fun test001UnaListaDeCarritoNoTieneNingunProducto(){
-		assertEquals(lista.productosEnLista().size, 0)
+	fun aUnPedidoSeLeAgreganTuplasDeProductoCantidad(){
+		val pedido = Pedido()
+		pedido.agregarProducto(Pair(producto, 20))
+
+		assertEquals(pedido.productosEnPedido(), arrayListOf(producto))
 	}
 
-	@Test
-	fun test002SeAgregaUnProductoALaLista(){
-		lista.agregarProducto("SKU 12590", 30)
-
-		assertEquals(lista.productosEnLista().size, 1)
-		assertEquals(lista.cantidadPorElProducto("SKU 12590"), 30)
-	}
-	@Test
-	fun test003SiElProductoYaEstaSeSumaLosValores(){
-		lista.agregarProducto("SKU 12590", 30)
-		lista.agregarProducto("SKU 12590", 30)
-		lista.agregarProducto("SKU 12590", 30)
-		lista.agregarProducto("SKU 12590", 30)
-
-		assertEquals(lista.productosEnLista().size, 1)
-		assertEquals(lista.cantidadPorElProducto("SKU 12590"), 120)
+	@Test()
+	fun siUnaCantidadEsMayorAlPedidoArrojaUnError(){
+		val pedido = Pedido()
+		assertFailsWith<PedidoNoValidoException> {
+			pedido.agregarProducto(Pair(producto, 200))
+		}
 	}
 }
+
