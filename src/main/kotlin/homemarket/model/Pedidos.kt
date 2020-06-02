@@ -5,9 +5,9 @@ import javax.persistence.*
 
 @Entity
 class Pedidos(@ElementCollection
-             private var parProductoCantidad: MutableSet<Pair<Producto, Int>> =  mutableSetOf(),
+              var parProductoCantidad: MutableSet<Pair<Producto, Int>> =  mutableSetOf(),
               @Id @GeneratedValue
-             private var id:Long = 0) {
+              var id:Long = 0) {
 
 
     fun productosEnPedidos(): MutableList<Producto> {

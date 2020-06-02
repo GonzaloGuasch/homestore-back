@@ -12,7 +12,10 @@ class Usuario(@Id
               var email: String,
               var password: String,
               @OneToOne(cascade = [CascadeType.ALL])
-              var pedidosRealizados: Pedidos = Pedidos()) {
+              var pedidosRealizados: Pedidos? = null) {
+    init {
+        this.pedidosRealizados = Pedidos()
+    }
 
     fun nombreDeUsuario(): String{
         return this.username
@@ -27,7 +30,7 @@ class Usuario(@Id
     }
 
     fun pedidosQueRealizo(): MutableList<Producto> {
-        return this.pedidosRealizados.productosEnPedidos()
+        return this.pedidosRealizados!!.productosEnPedidos()
     }
 
     fun setEncodePassword(encodePassword: String) {
