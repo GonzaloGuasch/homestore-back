@@ -1,5 +1,6 @@
 package homemarket.model
 
+import java.io.Serializable
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.Lob
@@ -12,11 +13,8 @@ class Producto(val nombre: String,
                val unidad: String,
                var stock: Int,
                var rubro: String,
-               var subrubro: String,
-               var estaDeOferta: Boolean = false,
-               @Lob
-               var imagenProducto: ByteArray? = null,
-               var descuento: Int = 0) {
+               var subrubro: String
+               ): Serializable {
 
 
     fun nombre(): String {
@@ -33,18 +31,6 @@ class Producto(val nombre: String,
 
     fun unidad(): String {
         return this.unidad.toUpperCase()
-    }
-
-    fun oferta(): Boolean {
-        return this.estaDeOferta
-    }
-
-    fun crearOferta() {
-        this.estaDeOferta = true
-    }
-
-    fun terminarOferta() {
-        this.estaDeOferta = false
     }
 
     fun tieneStock(): Boolean {
@@ -69,10 +55,6 @@ class Producto(val nombre: String,
 
     fun rubroProducto(): String {
         return this.rubro
-    }
-
-    fun settearImagenProducto(imagenProductoEnBytes: ByteArray) {
-        this.imagenProducto = imagenProductoEnBytes
     }
 
     fun tieneStockDisponible(cantidadParaPedido: Int): Boolean {

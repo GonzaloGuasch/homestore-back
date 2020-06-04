@@ -3,22 +3,22 @@ package homemarket.model
 import homemarket.model.exception.PedidoNoValidoException
 import javax.persistence.*
 
-@Entity
-class Pedidos(@ElementCollection
-              var parProductoCantidad: MutableSet<Pair<Producto, Int>> =  mutableSetOf(),
-              @Id @GeneratedValue
+
+class Pedidos(
+              var parProductoCantidad: MutableMap<Producto, Int> =  mutableMapOf(),
               var id:Long = 0) {
 
 
     fun productosEnPedidos(): MutableList<Producto> {
         var listaDePedidos = mutableListOf<Producto>()
-        this.parProductoCantidad.forEach { parClaveCantidad -> listaDePedidos.add(parClaveCantidad.first) }
+        this.parProductoCantidad.forEach { parClaveCantidad -> listaDePedidos.add(parClaveCantidad.key) }
      return listaDePedidos
     }
 
-    fun agregarProducto(pair: Pair<Producto, Int>) {
-        if (pair.first.tieneStockDisponible(pair.second)) {
-            this.parProductoCantidad.add(pair)
+    fun agregarProducto(producto: Producto, cantidad: Int) {
+        if (producto.tieneStockDisponible(cantidad)) {
+            val pair = Pair(producto, cantidad)
+            this.parProductoCantidad.put(producto, cantidad)
         } else {
             throw PedidoNoValidoException("No hay suficiente stock para este pedido!")
         }

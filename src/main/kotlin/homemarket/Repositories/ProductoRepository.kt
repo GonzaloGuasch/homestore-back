@@ -19,4 +19,7 @@ interface ProductoRepository: CrudRepository<Producto, String> {
     @Query("SELECT * FROM producto LIMIT 9 OFFSET :numeroPagina", nativeQuery = true)
     fun traerProductosDePagina(@Param("numeroPagina") numeroPagina: Int): MutableIterable<Producto>
 
+    @Query("SELECT * FROM producto WHERE nombre = :nombreproducto", nativeQuery = true)
+    fun findByName(@Param("nombreproducto") nombreproducto: String): Producto
+
 }

@@ -1,13 +1,15 @@
 package homemarket.controller
 
+import homemarket.model.FacturaWrapper
 import homemarket.model.ProductoCantidad
 import homemarket.model.Usuario
 import homemarket.service.UsuarioService
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/Usuarios")
-@CrossOrigin(origins = ["http://localhost:3000"])
+//@CrossOrigin(origins = ["http://localhost:3000"])
 class UsuarioController(private val usuarioService: UsuarioService){
 
     @PostMapping("/crearUsuario")
@@ -19,7 +21,9 @@ class UsuarioController(private val usuarioService: UsuarioService){
     @GetMapping("/getUser/{userName}")
     fun getUserByname(@PathVariable userName: String) = this.usuarioService.getByUsername(userName)
 
-    @PostMapping("/GuardarFactura/{username}")
-    fun guardarFactura(@RequestBody productoConCantidad: ProductoCantidad,
-                       @PathVariable username: String ) = this.usuarioService.guardarFactura(productoConCantidad, username)
+    @PostMapping("/GuardarFactura")
+    fun guardarFactura(@RequestBody facturaWrapper: FacturaWrapper) = this.usuarioService.guardarFactura(facturaWrapper)
+
+    @GetMapping("/PedidosDe/{username}")
+    fun pedidosDe(@PathVariable username: String) = this.usuarioService.pedidosDe(username)
 }

@@ -18,9 +18,6 @@ class ProductoController(private var productoService: ProductoService) {
     @GetMapping("/getProducto/{id}")
     fun productoPorId(@PathVariable id: String) = this.productoService.findById(id)
 
-    @PostMapping("/guardarProducto/{path_imagen}")
-    fun guardarProducto(@RequestBody producto: Producto, @PathVariable path_imagen: String) = this.productoService.save(producto, path_imagen)
-
     @PostMapping("/guardarProducto")
     fun guardarProductoSinImagen(@RequestBody producto: Producto) = this.productoService.guardarSinImagen(producto)
 

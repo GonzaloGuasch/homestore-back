@@ -1,5 +1,6 @@
 package homemarket.model
 
-class ProductoCantidad {
+class ProductoCantidad(var nombre: String,
+                       var cantidad: Int) {
 
 }

@@ -1,15 +1,13 @@
 package homemarket.service
 
 import homemarket.Repositories.UsuarioRepository
-import homemarket.model.PasswordEncoder
-import homemarket.model.ProductoCantidad
-import homemarket.model.UserResponse
-import homemarket.model.Usuario
+import homemarket.model.*
 import org.springframework.stereotype.Service
 
 @Service
 class UsuarioService(private val passwordEncoder: PasswordEncoder,
-                     private val usuarioRepository: UsuarioRepository){
+                     private val usuarioRepository: UsuarioRepository,
+                     private val productoService: ProductoService){
 
     fun saveUser(usuario: Usuario): UserResponse {
         val plain_password: String = usuario.contraseña()
@@ -34,10 +32,21 @@ class UsuarioService(private val passwordEncoder: PasswordEncoder,
         return this.usuarioRepository.findById(userName).get()
     }
 
-    fun guardarFactura(productoConCantidad: ProductoCantidad, username: String): Any {
-        val user: Usuario = this.usuarioRepository.findById(username).get()
-        //user.agregarPedido()
-        return 0
+    fun guardarFactura(facturaWrapper: FacturaWrapper): UserResponse{
+        val user: Usuario = this.usuarioRepository.findById(facturaWrapper.nombreUsuario).get()
+        this.realizarPedido(user, facturaWrapper.productos)
+        this.usuarioRepository.save(user)
+
+        return UserResponse(user.username, user.email, user.pedidosRealizados)
+    }
+
+    private fun realizarPedido(user: Usuario, pedidos: Set<ProductoCantidad>) {
+        pedidos.forEach{unPedido -> user.realizarPedido(unPedido.nombre, unPedido.cantidad) }
+        pedidos.forEach{unPedido -> this.productoService.decrementarStock(unPedido.nombre, unPedido.cantidad)}
+    }
+
+    fun pedidosDe(username: String): MutableSet<Pedido> {
+       return this.usuarioRepository.findById(username).get().pedidosQueRealizo()
     }
 
 }

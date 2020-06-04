@@ -1,9 +1,6 @@
 package homemarket.model
 
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.OneToOne
+import javax.persistence.*
 
 
 @Entity
@@ -11,11 +8,8 @@ class Usuario(@Id
               var username: String,
               var email: String,
               var password: String,
-              @OneToOne(cascade = [CascadeType.ALL])
-              var pedidosRealizados: Pedidos? = null) {
-    init {
-        this.pedidosRealizados = Pedidos()
-    }
+              @OneToMany(cascade = [CascadeType.ALL])
+              var pedidosRealizados: MutableSet<Pedido> =  mutableSetOf()){
 
     fun nombreDeUsuario(): String{
         return this.username
@@ -29,11 +23,17 @@ class Usuario(@Id
         return this.password
     }
 
-    fun pedidosQueRealizo(): MutableList<Producto> {
-        return this.pedidosRealizados!!.productosEnPedidos()
+    fun pedidosQueRealizo(): MutableSet<Pedido> {
+        return this.pedidosRealizados
     }
 
     fun setEncodePassword(encodePassword: String) {
         this.password = encodePassword
     }
+
+    fun realizarPedido(nombreProducto: String, cantidad: Int) {
+
+        this.pedidosRealizados.add(Pedido(nombreProducto, cantidad))
+    }
+
 }

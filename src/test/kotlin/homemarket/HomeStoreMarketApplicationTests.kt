@@ -25,14 +25,6 @@ class ProductoTest {
 	}
 
 	@Test
-	fun test002unProductoPuedePonerceEnOfertaYSalirDeEsta(){
-		producto_uno.crearOferta()
-		assertTrue(producto_uno.oferta())
-
-		producto_uno.terminarOferta()
-		assertFalse(producto_uno.oferta())
-	}
-	@Test
 	fun test003UnProductoDisminuyeYAUmentaSuStock(){
 		producto_uno.disminuirStock(101)
 		assertFalse(producto_uno.tieneStock())
@@ -50,7 +42,7 @@ class PedidosTest{
 	@Test
 	fun aUnPedidoSeLeAgreganTuplasDeProductoCantidad(){
 		val pedido = Pedidos()
-		pedido.agregarProducto(Pair(producto, 20))
+		pedido.agregarProducto(producto, 20)
 
 		assertEquals(pedido.productosEnPedidos(), arrayListOf(producto))
 	}
@@ -59,20 +51,29 @@ class PedidosTest{
 	fun siUnaCantidadEsMayorAlPedidoArrojaUnError(){
 		val pedido = Pedidos()
 		assertFailsWith<PedidoNoValidoException> {
-			pedido.agregarProducto(Pair(producto, 200))
+			pedido.agregarProducto(producto, 200)
 		}
 	}
 }
 
 class UsuariosTest{
 
+	val usuario = Usuario("Gonzalo", "Gonzalo@gmail.com", "1234")
+	val producto = Producto("turron fibra", 100, "SKU 12590", "c/u", 100, "GOLOSINAS", "Turrones")
+
 	@Test()
 	fun unUsuarioTieneUnUsernameEmailContraseñaYUnaListaDePedidos(){
-		val usuario = Usuario("Gonzalo", "Gonzalo@gmail.com", "1234")
 
 		assertEquals(usuario.nombreDeUsuario(), "Gonzalo")
 		assertEquals(usuario.emailUsuario(), "Gonzalo@gmail.com")
 		assertEquals(usuario.contraseña(), "1234")
 		assertEquals(usuario.pedidosQueRealizo().size, 0)
+	}
+
+	@Test
+	fun unUsuarioAgregaUnPedido(){
+		usuario.realizarPedido(producto.nombre, 23)
+
+		assertEquals(usuario.pedidosQueRealizo().size, 1)
 	}
 }

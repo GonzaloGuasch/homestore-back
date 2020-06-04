@@ -20,18 +20,6 @@ class ProductoService(private var productoRepository: ProductoRepository){
         return this.productoRepository.findById(id)
     }
 
-    fun save(producto: Producto, pathImagen: String) {
-        val file = File(pathImagen)
-        val imageInBytes = ByteArray((file.length()).toInt())
-        this.productoRepository.save(producto)
-        val fileInputStream = FileInputStream(file)
-        fileInputStream.read(imageInBytes)
-        fileInputStream.close()
-        producto.settearImagenProducto(imageInBytes)
-
-        this.productoRepository.save(producto)
-    }
-
     fun buscarProductosCon(keyword: String): Any {
         val keywordUppercase = keyword.toUpperCase()
         return this.productoRepository.buscarProductoQueContenga(keywordUppercase)
@@ -43,6 +31,14 @@ class ProductoService(private var productoRepository: ProductoRepository){
 
     fun traerProductosDeRubro(unRubro: String): Any {
         return this.productoRepository.traerTodosDelRubro(unRubro)
+    }
+
+    fun decrementarStock(nombreProducto: String, cantidad: Int) {
+        val producto: Producto = this.productoRepository.findByName(nombreProducto)
+        producto.disminuirStock(cantidad)
+
+        this.guardarSinImagen(producto)
+
     }
 
 
