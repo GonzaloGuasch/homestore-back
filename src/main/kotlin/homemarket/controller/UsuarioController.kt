@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/Usuarios")
-//@CrossOrigin(origins = ["http://localhost:3000"])
+@CrossOrigin(origins = ["http://localhost:3000"])
 class UsuarioController(private val usuarioService: UsuarioService){
 
     @PostMapping("/crearUsuario")

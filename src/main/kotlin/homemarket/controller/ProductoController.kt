@@ -1,6 +1,7 @@
 package homemarket.controller
 
 import homemarket.model.Producto
+import homemarket.model.ProductoCantidad
 import homemarket.service.ProductoService
 import org.springframework.web.bind.annotation.*
 
@@ -23,4 +24,7 @@ class ProductoController(private var productoService: ProductoService) {
 
     @GetMapping("/productosQueContengan/{keyword}")
     fun productosCon(@PathVariable keyword: String) = this.productoService.buscarProductosCon(keyword)
+
+    @PostMapping("/decrementarStock")
+    fun decrementarStockDeProductos(@RequestBody productos: Set<ProductoCantidad>) = this.productoService.decrementarStockParaProductos(productos)
 }

@@ -2,6 +2,7 @@ package homemarket.service
 
 import homemarket.Repositories.ProductoRepository
 import homemarket.model.Producto
+import homemarket.model.ProductoCantidad
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.FileInputStream
@@ -39,6 +40,10 @@ class ProductoService(private var productoRepository: ProductoRepository){
 
         this.guardarSinImagen(producto)
 
+    }
+
+    fun decrementarStockParaProductos(productos: Set<ProductoCantidad>){
+        productos.forEach { unProducto -> this.decrementarStock(unProducto.nombre, unProducto.cantidad) }
     }
 
 
