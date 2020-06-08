@@ -1,6 +1,7 @@
 package homemarket.controller
 
 import com.google.gson.GsonBuilder
+import com.mercadopago.MercadoPago
 import com.mercadopago.exceptions.MPException
 import com.mercadopago.resources.MerchantOrder
 import com.mercadopago.resources.Payment
@@ -20,6 +21,8 @@ class MercadoPagoController {
 
     @GetMapping("PagoDeProducto")
     fun pagoDeProducto(): String? {
+        MercadoPago.SDK.configure("Cliente Secret", "Cliente ID")
+        MercadoPago.SDK.setAccessToken("TEST-1388689821315510-052714-dddc281a34bbae27c432c8b87e55bb10-178004482")
         val preferencia = Preference()
         preferencia.setBackUrls(BackUrls()
                 .setFailure("http://localhost:8080/MP/failure")
@@ -73,7 +76,6 @@ class MercadoPagoController {
                 model: Model
     ): String? {
         val payment = Payment.findById(collectionId)
-        println(GsonBuilder().setPrettyPrinting().create().toJson(payment))
         model.addAttribute("payment", payment)
         return "ok"
     }
@@ -94,10 +96,7 @@ class MercadoPagoController {
     ): String? {
         model.addAttribute("preference_id", preferenceId)
         val preference = Preference.findById(preferenceId)
-        val order = MerchantOrder.findById(merchantOrderId)
         val payment = Payment.findById(collectionId)
-        println(GsonBuilder().setPrettyPrinting().create().toJson(order))
-        println(GsonBuilder().setPrettyPrinting().create().toJson(payment))
         model.addAttribute("items", preference.items)
         model.addAttribute("payment", payment)
         return "failure"
