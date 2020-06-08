@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/Producto")
-@CrossOrigin(origins = ["http://localhost:3000"])
+//@CrossOrigin(origins = ["http://localhost:3000"])
 class ProductoController(private var productoService: ProductoService) {
 
     @GetMapping("/traerTodos/{numero_pagina}")

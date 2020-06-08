@@ -4,8 +4,6 @@ import homemarket.Repositories.ProductoRepository
 import homemarket.model.Producto
 import homemarket.model.ProductoCantidad
 import org.springframework.stereotype.Service
-import java.io.File
-import java.io.FileInputStream
 import java.util.*
 
 
