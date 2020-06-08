@@ -1,6 +1,7 @@
 package homemarket.service
 
 import homemarket.Repositories.ProductoRepository
+import homemarket.model.ListaProductosWrapper
 import homemarket.model.Producto
 import homemarket.model.ProductoCantidad
 import org.springframework.stereotype.Service
@@ -42,6 +43,10 @@ class ProductoService(private var productoRepository: ProductoRepository){
 
     fun decrementarStockParaProductos(productos: Set<ProductoCantidad>){
         productos.forEach { unProducto -> this.decrementarStock(unProducto.nombre, unProducto.cantidad) }
+    }
+
+    fun actualizarProductos(listaProductos: ListaProductosWrapper): Any {
+        return 200
     }
 
 
