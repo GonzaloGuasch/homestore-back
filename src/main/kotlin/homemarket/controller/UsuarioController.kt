@@ -26,4 +26,13 @@ class UsuarioController(private val usuarioService: UsuarioService){
 
     @GetMapping("/PedidosDe/{username}")
     fun pedidosDe(@PathVariable username: String) = this.usuarioService.pedidosDe(username)
+
+    @GetMapping("/mailExistente/{user_email_register}")
+    fun checkEmail(@PathVariable user_email_register: String): Any {
+        if(this.usuarioService.checkEmail(user_email_register) == 1){
+            throw Exception("Email en uso");
+        }else{
+            return 200
+        }
+    }
 }

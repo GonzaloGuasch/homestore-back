@@ -49,4 +49,8 @@ class UsuarioService(private val passwordEncoder: PasswordEncoder,
        return this.usuarioRepository.findById(username).get().pedidosQueRealizo()
     }
 
+    fun checkEmail(userEmailRegister: String): Int {
+        return this.usuarioRepository.checkEmail(userEmailRegister)
+    }
+
 }

@@ -9,4 +9,7 @@ interface UsuarioRepository: CrudRepository<Usuario, String> {
 
     @Query("SELECT * FROM usuario WHERE email = :userEmail", nativeQuery = true)
     fun findByEmail(@Param("userEmail") userEmail: String): Usuario?
+
+    @Query("SELECT EXISTS(SELECT * FROM usuario WHERE email = :userEmail)", nativeQuery = true)
+    fun checkEmail(@Param("userEmail") userEmail: String): Int
 }
