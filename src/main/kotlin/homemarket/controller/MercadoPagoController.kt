@@ -7,20 +7,22 @@ import com.mercadopago.resources.MerchantOrder
 import com.mercadopago.resources.Payment
 import com.mercadopago.resources.Preference
 import com.mercadopago.resources.datastructures.preference.*
+import homemarket.model.FacturaWrapper
+import homemarket.model.ListaProductosWrapper
+import homemarket.model.ListaWrapper
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.view.RedirectView
 import javax.servlet.http.HttpServletRequest
 
 
 @RestController
 @RequestMapping("/MP")
+@CrossOrigin(origins = ["http://localhost:3000"])
 class MercadoPagoController {
 
-    @GetMapping("PagoDeProducto")
-    fun pagoDeProducto(): String? {
+    @PostMapping("PagoDeProducto")
+    fun pagoDeProducto(@RequestBody facturaWrapper: FacturaWrapper): String? {
         MercadoPago.SDK.configure("Cliente Secret", "Cliente ID")
         MercadoPago.SDK.setAccessToken("TEST-1388689821315510-052714-dddc281a34bbae27c432c8b87e55bb10-178004482")
         val preferencia = Preference()
@@ -28,7 +30,6 @@ class MercadoPagoController {
                 .setFailure("http://localhost:8080/MP/failure")
                 .setPending("http://localhost:8080/MP/pending")
                 .setSuccess("http://localhost:8080/MP/success"))
-
         val item = Item()
         item.setTitle("Mi producto")
                 .setQuantity(1)
@@ -50,9 +51,8 @@ class MercadoPagoController {
                         .setStreetNumber(1004)
                         .setZipCode("11020"))
 
-
-
         preferencia.appendItem(item)
+        preferencia.autoReturn = Preference.AutoReturn.all
 
         preferencia.payer = payer
         preferencia.binaryMode = true
@@ -63,22 +63,10 @@ class MercadoPagoController {
 
     @GetMapping("/success")
     @Throws(MPException::class)
-    fun success(request: HttpServletRequest?,
-                @RequestParam("collection_id") collectionId: String?,
-                @RequestParam("collection_status") collectionStatus: String?,
-                @RequestParam("external_reference") externalReference: String?,
-                @RequestParam("payment_type") paymentType: String?,
-                @RequestParam("merchant_order_id") merchantOrderId: String?,
-                @RequestParam("preference_id") preferenceId: String?,
-                @RequestParam("site_id") siteId: String?,
-                @RequestParam("processing_mode") processingMode: String?,
-                @RequestParam("merchant_account_id") merchantAccountId: String?,
-                model: Model
-    ): String? {
-        val payment = Payment.findById(collectionId)
-        model.addAttribute("payment", payment)
-        return "ok"
+    fun success(): RedirectView {
+        return RedirectView("http://localhost:3000/")
     }
+
 
     @GetMapping("/failure")
     @Throws(MPException::class)
