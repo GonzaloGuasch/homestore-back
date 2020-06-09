@@ -7,7 +7,7 @@ import javax.persistence.Lob
 
 @Entity
 class Producto(val nombre: String,
-               val precio: Int,
+               var precio: Int,
                @Id
                val id: String,
                val unidad: String,
