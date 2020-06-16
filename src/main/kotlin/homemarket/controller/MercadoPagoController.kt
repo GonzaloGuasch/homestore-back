@@ -1,26 +1,21 @@
 package homemarket.controller
 
-import com.google.gson.GsonBuilder
 import com.mercadopago.MercadoPago
 import com.mercadopago.exceptions.MPException
-import com.mercadopago.resources.MerchantOrder
-import com.mercadopago.resources.Payment
 import com.mercadopago.resources.Preference
 import com.mercadopago.resources.datastructures.preference.*
-import homemarket.model.FacturaWrapper
-import homemarket.model.ListaProductosWrapper
-import homemarket.model.ListaWrapper
+import homemarket.model.*
+import homemarket.service.ProductoService
 import homemarket.service.UsuarioService
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.view.RedirectView
-import javax.servlet.http.HttpServletRequest
 
 
 @RestController
 @RequestMapping("/MP")
 @CrossOrigin(origins = ["http://localhost:3000"])
-class MercadoPagoController(private var usuarioService: UsuarioService){
+class MercadoPagoController(private var usuarioService: UsuarioService,
+                            private var productoService: ProductoService){
 
     @PostMapping("PagoDeProducto")
     fun pagoDeProducto(@RequestBody facturaWrapper: FacturaWrapper): String? {
@@ -29,29 +24,16 @@ class MercadoPagoController(private var usuarioService: UsuarioService){
         val preferencia = Preference()
         preferencia.setBackUrls(BackUrls()
                 .setFailure("http://localhost:8080/MP/redirect")
-                .setSuccess("http://localhost:8080/MP/redirect"))
-        val item = Item()
-        item.setTitle("Mi producto")
-                .setQuantity(1)
-                .setUnitPrice(75.56.toFloat())
+                .setSuccess("http://localhost:8080/MP/redirectSuccess"))
+
+        facturaWrapper.productos.forEach {var i = Item().setTitle(it.producto)
+                                                 .setQuantity(it.cantidad)
+                                                 .setUnitPrice(it.precio.toFloat()  )
+                                            preferencia.appendItem(i)}
 
         val payer = Payer()
-        payer.setName("Charles")
-                .setSurname("Luevano")
-                .setEmail("charles@hotmail.com")
-                .setDateCreated("2018-06-02T12:58:41.425-04:00")
-                .setPhone(Phone()
-                        .setAreaCode("")
-                        .setNumber("949 128 866"))
-                .setIdentification(Identification()
-                        .setType("DNI")
-                        .setNumber("12345678"))
-                .setAddress(Address()
-                        .setStreetName("Cuesta Miguel Armendáriz")
-                        .setStreetNumber(1004)
-                        .setZipCode("11020"))
+        payer.setName(facturaWrapper.nombreUsuario)
 
-        preferencia.appendItem(item)
         preferencia.autoReturn = Preference.AutoReturn.all
 
         preferencia.payer = payer
@@ -59,6 +41,15 @@ class MercadoPagoController(private var usuarioService: UsuarioService){
         val result = preferencia.save()
 
         return result.sandboxInitPoint
+    }
+
+
+
+
+    @GetMapping("/redirectSuccess")
+    @Throws(MPException::class)
+    fun redirectSuccess(): RedirectView {
+        return RedirectView("http://localhost:3000/CompraFinalizada")
     }
 
     @GetMapping("/redirect")

@@ -7,6 +7,8 @@ import javax.persistence.Id
 @Entity
 class Pedido(var nombreProducto: String,
              var cantidad: Int,
+             var precio: Int,
+             var id_producto: Int,
              @Id @GeneratedValue var id: Long = 0)
 {
 }

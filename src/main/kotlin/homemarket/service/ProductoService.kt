@@ -1,11 +1,12 @@
 package homemarket.service
 
 import homemarket.Repositories.ProductoRepository
+import homemarket.model.ListaProducosDecrementar
 import homemarket.model.ListaProductosWrapper
 import homemarket.model.Producto
 import homemarket.model.ProductoActualizarWrapper
-import homemarket.model.ProductoCantidad
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 
@@ -13,12 +14,20 @@ import java.util.*
 class ProductoService(private var productoRepository: ProductoRepository){
 
 
-    fun findAll(numero_pagina: String): MutableIterable<Producto> {
+    fun findAllByPage(numero_pagina: String): MutableIterable<Producto> {
         return this.productoRepository.traerProductosDePagina(numero_pagina.toInt())
     }
 
-    fun findById(id: String): Optional<Producto> {
-        return this.productoRepository.findById(id)
+    fun findById(id: String): Producto {
+        val p = this.productoRepository.findById(id).get()
+        return Producto(p.nombre,
+                        p.precio,
+                        p.id,
+                        p.unidad,
+                        p.stock,
+                        p.rubro,
+                        p.subrubro,
+                        p.imagenProducto)
     }
 
     fun buscarProductosCon(keyword: String): Any {
@@ -42,8 +51,8 @@ class ProductoService(private var productoRepository: ProductoRepository){
 
     }
 
-    fun decrementarStockParaProductos(productos: Set<ProductoCantidad>){
-        productos.forEach { unProducto -> this.decrementarStock(unProducto.nombre, unProducto.cantidad) }
+    fun decrementarStockParaProductos(listaProductos: ListaProducosDecrementar){
+        listaProductos.productos.forEach { unProducto -> this.decrementarStock(unProducto.producto, unProducto.cantidad) }
     }
 
     fun actualizarProductos(listaProductos: ListaProductosWrapper) {
@@ -67,6 +76,13 @@ class ProductoService(private var productoRepository: ProductoRepository){
             return 404
         }
         return 500
+    }
+
+    fun guardarImagenDeProducto(imagen: MultipartFile, id: String): Producto {
+        val producto =  this.productoRepository.findById(id).get()
+        producto.imagenProducto = imagen.bytes
+        this.productoRepository.save(producto)
+        return producto
     }
 
 

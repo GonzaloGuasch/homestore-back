@@ -1,12 +1,9 @@
 package homemarket
 
-import homemarket.model.Pedidos
 import homemarket.model.Producto
 import homemarket.model.Usuario
-import homemarket.model.exception.PedidoNoValidoException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFailsWith
 
 class ProductoTest {
 
@@ -35,27 +32,6 @@ class ProductoTest {
 
 }
 
-class PedidosTest{
-
-	private val producto = Producto("turron fibra", 100, "SKU 12590", "c/u", 100, "GOLOSINAS", "Turrones")
-
-	@Test
-	fun aUnPedidoSeLeAgreganTuplasDeProductoCantidad(){
-		val pedido = Pedidos()
-		pedido.agregarProducto(producto, 20)
-
-		assertEquals(pedido.productosEnPedidos(), arrayListOf(producto))
-	}
-
-	@Test()
-	fun siUnaCantidadEsMayorAlPedidoArrojaUnError(){
-		val pedido = Pedidos()
-		assertFailsWith<PedidoNoValidoException> {
-			pedido.agregarProducto(producto, 200)
-		}
-	}
-}
-
 class UsuariosTest{
 
 	val usuario = Usuario("Gonzalo", "Gonzalo@gmail.com", "1234")
@@ -72,7 +48,7 @@ class UsuariosTest{
 
 	@Test
 	fun unUsuarioAgregaUnPedido(){
-		usuario.realizarPedido(producto.nombre, 23)
+		usuario.realizarPedido(producto.nombre,  1,23,producto.precio)
 
 		assertEquals(usuario.pedidosQueRealizo().size, 1)
 	}

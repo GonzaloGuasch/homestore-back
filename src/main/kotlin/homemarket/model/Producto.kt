@@ -13,7 +13,9 @@ class Producto(val nombre: String,
                val unidad: String,
                var stock: Int,
                var rubro: String,
-               var subrubro: String
+               var subrubro: String,
+               @Lob
+               var imagenProducto: ByteArray = byteArrayOf()
                ): Serializable {
 
 

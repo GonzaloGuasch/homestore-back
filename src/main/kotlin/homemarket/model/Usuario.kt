@@ -9,7 +9,9 @@ class Usuario(@Id
               var email: String,
               var password: String,
               @OneToMany(cascade = [CascadeType.ALL])
-              var pedidosRealizados: MutableSet<Pedido> =  mutableSetOf()){
+              var pedidosRealizados: MutableSet<Pedido> =  mutableSetOf(),
+              @OneToOne(cascade = [CascadeType.ALL])
+              var informacionEnFactura: UsuarioFacturaInfo? = null){
 
     fun nombreDeUsuario(): String{
         return this.username
@@ -31,9 +33,13 @@ class Usuario(@Id
         this.password = encodePassword
     }
 
-    fun realizarPedido(nombreProducto: String, cantidad: Int) {
+    fun realizarPedido(nombreProducto: String, id: Int, cantidad: Int, precio: Int) {
 
-        this.pedidosRealizados.add(Pedido(nombreProducto, cantidad))
+        this.pedidosRealizados.add(Pedido(nombreProducto, cantidad, precio, id))
+    }
+
+    fun generarInfoFactura(usuarioFacturaInfo: UsuarioFacturaInfo) {
+        this.informacionEnFactura = usuarioFacturaInfo
     }
 
 }
