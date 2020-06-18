@@ -28,17 +28,29 @@ class UsuarioService(private val passwordEncoder: PasswordEncoder,
         return null
     }
 
-    fun getByUsername(userName: String): UserResponse {
-        val user =  this.usuarioRepository.findById(userName).get()
-        return UserResponse(user.username, user.email, user.pedidosRealizados, user.informacionEnFactura)
+    fun getByUsername(userName: String): UserResponse? {
+        val user =  this.usuarioRepository.findById(userName)
+        return if(user.isEmpty){
+            null
+        }else{
+            val usuario = user.get()
+                UserResponse(usuario.username,
+                            usuario.email,
+                            usuario.pedidosRealizados,
+                            usuario.informacionEnFactura)
+        }
     }
 
-    fun guardarFactura(facturaWrapper: FacturaWrapper): UserResponse{
-        val user: Usuario = this.usuarioRepository.findById(facturaWrapper.nombreUsuario).get()
-        this.realizarPedido(user, facturaWrapper.productos)
-        this.usuarioRepository.save(user)
-
-        return UserResponse(user.username, user.email, user.pedidosRealizados, user.informacionEnFactura)
+    fun guardarFactura(facturaWrapper: FacturaWrapper): UserResponse? {
+        val user = this.usuarioRepository.findById(facturaWrapper.nombreUsuario)
+        return if(user.isEmpty){
+            null
+        }else{
+            val usuario = user.get()
+            this.realizarPedido(usuario, facturaWrapper.productos)
+            this.usuarioRepository.save(usuario)
+            UserResponse(usuario.username, usuario.email, usuario.pedidosRealizados, usuario.informacionEnFactura)
+        }
     }
 
     private fun realizarPedido(user: Usuario, pedidos: Set<ProductoCantidad>) {
@@ -54,11 +66,16 @@ class UsuarioService(private val passwordEncoder: PasswordEncoder,
         return this.usuarioRepository.checkEmail(userEmailRegister)
     }
 
-    fun guardarInfoFacturaDeUsuario(usuarioFacturaInfoWrapper: UsuarioFacturaInfoWrapper): UserResponse {
-        val usuario = this.usuarioRepository.findById(usuarioFacturaInfoWrapper.username).get()
-        usuario.generarInfoFactura(usuarioFacturaInfoWrapper.usuarioFacturaInfo)
-        this.usuarioRepository.save(usuario)
-        return UserResponse(usuario.username, usuario.email, usuario.pedidosRealizados, usuario.informacionEnFactura)
+    fun guardarInfoFacturaDeUsuario(usuarioFacturaInfoWrapper: UsuarioFacturaInfoWrapper): UserResponse?{
+        val usuario = this.usuarioRepository.findById(usuarioFacturaInfoWrapper.username)
+        return if(usuario.isEmpty){
+            return null
+        }else{
+            val usuario = usuario.get()
+            usuario.generarInfoFactura(usuarioFacturaInfoWrapper.usuarioFacturaInfo)
+            this.usuarioRepository.save(usuario)
+            return UserResponse(usuario.username, usuario.email, usuario.pedidosRealizados, usuario.informacionEnFactura)
+        }
     }
 
 }

@@ -19,15 +19,7 @@ class ProductoService(private var productoRepository: ProductoRepository){
     }
 
     fun findById(id: String): Producto {
-        val p = this.productoRepository.findById(id).get()
-        return Producto(p.nombre,
-                        p.precio,
-                        p.id,
-                        p.unidad,
-                        p.stock,
-                        p.rubro,
-                        p.subrubro,
-                        p.imagenProducto)
+        return this.productoRepository.findById(id).get()
     }
 
     fun buscarProductosCon(keyword: String): Any {
@@ -39,8 +31,8 @@ class ProductoService(private var productoRepository: ProductoRepository){
         return this.productoRepository.save(producto)
     }
 
-    fun traerProductosDeRubro(unRubro: String): Any {
-        return this.productoRepository.traerTodosDelRubro(unRubro)
+    fun traerProductosDeRubro(unRubro: String, limit: String): Any {
+        return this.productoRepository.traerTodosDelRubro(unRubro, limit.toInt())
     }
 
     fun decrementarStock(nombreProducto: String, cantidad: Int) {

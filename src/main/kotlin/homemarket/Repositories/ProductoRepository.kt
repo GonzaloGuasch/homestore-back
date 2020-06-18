@@ -14,8 +14,9 @@ interface ProductoRepository: JpaRepository<Producto, String> {
      fun buscarProductoQueContenga(@Param("nombreProducto") nombreProducto: String): MutableList<Producto>
 
 
-    @Query("SELECT * FROM producto WHERE rubro = :unRubro", nativeQuery = true)
-    fun traerTodosDelRubro(@Param("unRubro") unRubro: String): MutableList<Producto>
+    @Query("SELECT * FROM producto WHERE rubro = :unRubro LIMIT 8 OFFSET :numeroPagina  ", nativeQuery = true)
+    fun traerTodosDelRubro(@Param("unRubro") unRubro: String,
+                           @Param("numeroPagina") numeroPagina: Int): MutableList<Producto>
 
     @Query("SELECT * FROM producto LIMIT 8 OFFSET :numeroPagina", nativeQuery = true)
     fun traerProductosDePagina(@Param("numeroPagina") numeroPagina: Int): MutableIterable<Producto>
