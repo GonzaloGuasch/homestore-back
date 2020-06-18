@@ -18,8 +18,13 @@ class ProductoService(private var productoRepository: ProductoRepository){
         return this.productoRepository.traerProductosDePagina(numero_pagina.toInt())
     }
 
-    fun findById(id: String): Producto {
-        return this.productoRepository.findById(id).get()
+    fun findById(id: String): Producto? {
+        val producto = this.productoRepository.findById(id)
+        return if(producto.isEmpty){
+            null
+        }else{
+            producto.get()
+        }
     }
 
     fun buscarProductosCon(keyword: String): Any {
@@ -33,18 +38,6 @@ class ProductoService(private var productoRepository: ProductoRepository){
 
     fun traerProductosDeRubro(unRubro: String, limit: String): Any {
         return this.productoRepository.traerTodosDelRubro(unRubro, limit.toInt())
-    }
-
-    fun decrementarStock(nombreProducto: String, cantidad: Int) {
-        val producto: Producto = this.productoRepository.findByName(nombreProducto)
-        producto.disminuirStock(cantidad)
-
-        this.guardarSinImagen(producto)
-
-    }
-
-    fun decrementarStockParaProductos(listaProductos: ListaProducosDecrementar){
-        listaProductos.productos.forEach { unProducto -> this.decrementarStock(unProducto.producto, unProducto.cantidad) }
     }
 
     fun actualizarProductos(listaProductos: ListaProductosWrapper) {
@@ -77,5 +70,25 @@ class ProductoService(private var productoRepository: ProductoRepository){
         return producto
     }
 
+    fun aumentarStockParaProductos(listaProductos: ListaProducosDecrementar) {
+        listaProductos.productos.forEach { unProducto -> this.aumentarStock(unProducto.producto, unProducto.cantidad) }
+    }
+    fun aumentarStock(nombreProducto: String, cantidad: Int) {
+        val producto: Producto = this.productoRepository.findByName(nombreProducto)
+        producto.agregarStock(cantidad)
+
+        this.guardarSinImagen(producto)
+
+    }
+    fun decrementarStockParaProductos(listaProductos: ListaProducosDecrementar){
+        listaProductos.productos.forEach { unProducto -> this.decrementarStock(unProducto.producto, unProducto.cantidad) }
+    }
+    fun decrementarStock(nombreProducto: String, cantidad: Int) {
+        val producto: Producto = this.productoRepository.findByName(nombreProducto)
+        producto.disminuirStock(cantidad)
+
+        this.guardarSinImagen(producto)
+
+    }
 
 }

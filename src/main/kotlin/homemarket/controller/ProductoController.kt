@@ -1,5 +1,6 @@
 package homemarket.controller
 
+import homemarket.Exceptions.ProductoNoEncotradoException
 import homemarket.model.ListaProducosDecrementar
 import homemarket.model.Producto
 import homemarket.service.ProductoService
@@ -19,7 +20,14 @@ class ProductoController(private var productoService: ProductoService) {
                         @PathVariable limit: String) = this.productoService.traerProductosDeRubro(unRubro, limit)
 
     @GetMapping("/getProducto/{id}")
-    fun productoPorId(@PathVariable id: String) = this.productoService.findById(id)
+    fun productoPorId(@PathVariable id: String): Any{
+        val productoOrNull = this.productoService.findById(id)
+        if(productoOrNull == null){
+            throw ProductoNoEncotradoException("No se encontro ningun producto")
+        }else{
+            return productoOrNull
+        }
+    }
 
     @PostMapping("/guardarProducto")
     fun guardarProductoSinImagen(@RequestBody producto: Producto) = this.productoService.guardarSinImagen(producto)
@@ -31,7 +39,10 @@ class ProductoController(private var productoService: ProductoService) {
     @GetMapping("/productosQueContengan/{keyword}")
     fun productosCon(@PathVariable keyword: String) = this.productoService.buscarProductosCon(keyword)
 
-    
+
     @PostMapping("/decrementarStock")
     fun decrementarStockDeProductos(@RequestBody productos: ListaProducosDecrementar) = this.productoService.decrementarStockParaProductos(productos)
+
+    @PostMapping("/aumentarStock")
+    fun aumentarStcokDeProductos(@RequestBody productos: ListaProducosDecrementar) = this.productoService.aumentarStockParaProductos(productos)
 }

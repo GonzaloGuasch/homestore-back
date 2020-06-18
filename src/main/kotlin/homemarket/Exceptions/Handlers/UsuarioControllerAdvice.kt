@@ -1,6 +1,7 @@
 package homemarket.Exceptions.Handlers
 
 import homemarket.Exceptions.MailEnUsoException
+import homemarket.Exceptions.ProductoNoEncotradoException
 import homemarket.Exceptions.UsuarioNoExistenteException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
