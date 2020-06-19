@@ -1,6 +1,7 @@
 package homemarket.Exceptions.Handlers
 
 import homemarket.Exceptions.ProductoNoEncotradoException
+import homemarket.Exceptions.StockInsuficienteParaProductoException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -15,6 +16,14 @@ class ProductoControllerAdvice: ResponseEntityExceptionHandler()  {
     fun handleProductoNoEncontrado(exception: ProductoNoEncotradoException,
                                    request: WebRequest): ResponseEntity<ErrorDetails> {
         val errorDetails = ErrorDetails("No se pudo encontrar ningun producto con el id que utilizaste",
+                exception.message!!)
+
+        return ResponseEntity(errorDetails, HttpStatus.NOT_FOUND)
+    }
+    @ExceptionHandler(value = [(StockInsuficienteParaProductoException::class)])
+    fun handleStockInsuficiente(exception: StockInsuficienteParaProductoException,
+                                   request: WebRequest): ResponseEntity<ErrorDetails> {
+        val errorDetails = ErrorDetails("El producto que buscaste tiene menos stock del que indicaste",
                 exception.message!!)
 
         return ResponseEntity(errorDetails, HttpStatus.NOT_FOUND)

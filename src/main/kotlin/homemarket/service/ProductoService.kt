@@ -27,7 +27,7 @@ class ProductoService(private var productoRepository: ProductoRepository){
         }
     }
 
-    fun buscarProductosCon(keyword: String): Any {
+    fun buscarProductosCon(keyword: String): MutableList<Producto> {
         val keywordUppercase = keyword.toUpperCase()
         return this.productoRepository.buscarProductoQueContenga(keywordUppercase)
     }
@@ -89,6 +89,11 @@ class ProductoService(private var productoRepository: ProductoRepository){
 
         this.guardarSinImagen(producto)
 
+    }
+
+    fun stockDe(idProducto: String): Int {
+        val producto = this.productoRepository.findById(idProducto).get()
+        return producto.stock
     }
 
 }

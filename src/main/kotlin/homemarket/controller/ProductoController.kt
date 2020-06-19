@@ -1,6 +1,7 @@
 package homemarket.controller
 
 import homemarket.Exceptions.ProductoNoEncotradoException
+import homemarket.Exceptions.StockInsuficienteParaProductoException
 import homemarket.model.ListaProducosDecrementar
 import homemarket.model.Producto
 import homemarket.service.ProductoService
@@ -37,12 +38,29 @@ class ProductoController(private var productoService: ProductoService) {
                 @PathVariable id_Producto: String) = this.productoService.guardarImagenDeProducto(imagenProducto, id_Producto)
 
     @GetMapping("/productosQueContengan/{keyword}")
-    fun productosCon(@PathVariable keyword: String) = this.productoService.buscarProductosCon(keyword)
-
+    fun productosCon(@PathVariable keyword: String){
+        val productoOrEmptyList = this.productoService.buscarProductosCon(keyword)
+        if(productoOrEmptyList.size == 0){
+            throw ProductoNoEncotradoException("No se encontro ningun producto")
+        }else{
+            productoOrEmptyList
+        }
+    }
 
     @PostMapping("/decrementarStock")
     fun decrementarStockDeProductos(@RequestBody productos: ListaProducosDecrementar) = this.productoService.decrementarStockParaProductos(productos)
 
     @PostMapping("/aumentarStock")
     fun aumentarStcokDeProductos(@RequestBody productos: ListaProducosDecrementar) = this.productoService.aumentarStockParaProductos(productos)
+
+    @GetMapping("/hayStockPara/{id}/{stock}")
+    fun hayStockPara(@PathVariable id: String,
+                     @PathVariable stock: String): Any {
+        val stockProducto = this.productoService.stockDe(id)
+        if(stockProducto >= stock.toInt()){
+            return 200
+        }else{
+            throw StockInsuficienteParaProductoException("El producto tiene $stockProducto de stock")
+        }
+    }
 }
