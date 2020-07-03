@@ -60,7 +60,7 @@ class ProductoController(private var productoService: ProductoService) {
         if(stockProducto >= stock.toInt()){
             return 200
         }else{
-            throw StockInsuficienteParaProductoException("El producto tiene $stockProducto de stock")
+            throw StockInsuficienteParaProductoException("El producto tiene disponible $stockProducto de stock")
         }
     }
 }

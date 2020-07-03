@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "http",
+      "type": "java.lang.String",
+      "description": "Description for http."
+  }
+] }
